@@ -1,0 +1,43 @@
+<h2>Create New Quotation</h2>
+<form [formGroup]="quotationForm" (ngSubmit)="onSubmit()" class="quotation-form">
+  <label>
+    Quotation ID:
+    <input formControlName="quotation_id" />
+  </label>
+
+  <label>
+    Client Name:
+    <input formControlName="client_name" />
+  </label>
+
+  <label>
+    Client Mobile:
+    <input formControlName="client_mobile" />
+  </label>
+
+  <label>
+    Quotation Date:
+    <input type="date" formControlName="quotation_date" />
+  </label>
+
+  <label>
+    Status:
+    <select formControlName="status">
+      <option value="Pending">Pending</option>
+      <option value="Approved">Approved</option>
+      <option value="Rejected">Rejected</option>
+    </select>
+  </label>
+
+  <label>
+    Total Amount:
+    <input type="number" formControlName="total_amount" />
+  </label>
+
+  <label>
+    Approval Date:
+    <input type="date" formControlName="approval_date" />
+  </label>
+
+  <button type="submit" [disabled]="quotationForm.invalid">Save Quotation</button>
+</form>

@@ -37,3 +37,7 @@ node_modules
 .angular/cache/20.1.5/supply-sync/vite/deps/zone__js.js.map
 .angular/cache/20.1.5/supply-sync/vite/deps_ssr/_metadata.json
 .angular/cache/20.1.5/supply-sync/vite/deps_ssr/package.json
+.angular/cache/20.1.5/supply-sync/vite/deps/@angular_forms.js
+.angular/cache/20.1.5/supply-sync/vite/deps/@angular_forms.js.map
+.angular/cache/20.1.5/supply-sync/vite/deps_temp_16e7aaa8/package.json
+.angular/cache/20.1.5/supply-sync/vite/deps_temp_8c6324fb/package.json

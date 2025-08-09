@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';  // For *ngIf, *ngFor
 import { GoogleSheetService, QuotationMaster } from '../../services/google-sheet';
-import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-quotation-list',

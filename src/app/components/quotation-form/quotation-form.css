@@ -1,0 +1,36 @@
+.quotation-form {
+  max-width: 400px;
+  margin: 20px auto;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-family: Arial, sans-serif;
+  background: #fafafa;
+}
+
+.quotation-form label {
+  display: block;
+  margin-bottom: 12px;
+  font-weight: bold;
+  color: #333;
+}
+
+.quotation-form input,
+.quotation-form select {
+  width: 100%;
+  padding: 6px 8px;
+  margin-top: 4px;
+  box-sizing: border-box;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.quotation-form button {
+  margin-top: 15px;
+  padding: 10px 15px;
+  width: 100%;
+  background-color: #007bff;
+  border: none;
+ 
+}
