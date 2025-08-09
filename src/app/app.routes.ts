@@ -5,7 +5,8 @@ import { QuotationList } from './components/quotation-list/quotation-list'; // i
 export const routes: Routes = [
 
   { path: '', redirectTo: 'quotations', pathMatch: 'full' },
-    { path: 'quotations', component: QuotationList },
-  { path: 'new-quotation', component: QuotationFormComponent }
+  { path: 'quotations', component: QuotationList },
+  { path: 'new-quotation', component: QuotationFormComponent },
+  { path: '**', redirectTo: 'quotations' }
   // Add other routes as needed
 ];

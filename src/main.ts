@@ -3,11 +3,13 @@ import { appConfig } from './app/app.config';
 import { App } from './app/app';
 import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { routes } from './app/app.routes';
 
-  bootstrapApplication(App, {
+bootstrapApplication(App, {
   providers: [
-    provideHttpClient(),  // <-- add this here
-    provideRouter(routes)
+    provideHttpClient(),
+    provideRouter(routes),
+    { provide: LocationStrategy, useClass: HashLocationStrategy }  // <-- add this for hash routing
   ],
 }).catch(err => console.error(err));
