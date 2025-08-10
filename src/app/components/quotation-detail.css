@@ -1,186 +1,161 @@
-/* quotation-detail.component.css */
-/* Main container for the entire component */
 .quotation-container {
   font-family: Arial, sans-serif;
-  max-width: 900px;
-  margin: 2rem auto;
-  padding: 1.5rem;
-  background-color: #f0f4f8;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  color: #334e68;
+  width: 210mm; /* A4 width */
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
 }
 
-/* Card styling for quotation details */
-.quotation-card, .items-table {
-  background-color: #ffffff;
-  padding: 1.5rem;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  margin-bottom: 1.5rem;
-}
-
-.card-header {
+.header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #e2e8f0;
-  padding-bottom: 1rem;
-  margin-bottom: 1rem;
+  border-bottom: 2px solid #000;
+  padding-bottom: 10px;
+  margin-bottom: 15px;
 }
 
-.card-title {
-  font-size: 1.8rem;
-  font-weight: 600;
-  color: #1e293b;
+.logo {
+  width: 80px;
+  margin-right: 20px;
 }
 
-.quotation-id {
-  font-size: 1rem;
-  color: #64748b;
-  font-weight: 500;
+.logo img {
+  width: 100%;
 }
 
-.card-body {
+.company-details h2 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.company-details p {
+  margin: 2px 0;
+  font-size: 12px;
+}
+
+.contact-info {
+  border-bottom: 2px solid #000;
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.quotation-info {
   display: flex;
   justify-content: space-between;
-  gap: 2rem;
+  margin-bottom: 15px;
+  font-size: 14px;
 }
 
-.client-info, .quote-status {
-  flex: 1;
+.info-left, .info-right {
+  width: 45%;
 }
 
-.card-body h3 {
-  font-size: 1.2rem;
-  color: #0f172a;
-  border-bottom: 2px solid #3b82f6;
-  display: inline-block;
-  padding-bottom: 0.25rem;
-  margin-bottom: 1rem;
+.info-left p, .info-right p {
+  margin: 5px 0;
+  display: flex;
+  align-items: center;
 }
 
-.card-body p {
-  margin: 0.5rem 0;
-  font-size: 0.95rem;
+.quotation-info input[type="text"],
+.quotation-info input[type="date"] {
+  border: none;
+  border-bottom: 1px solid #000;
+  font-size: 14px;
+  padding: 2px;
+  margin-left: 5px;
+  flex-grow: 1;
 }
 
-/* Status badge styling */
-.status-badge {
-  display: inline-block;
-  padding: 0.25rem 0.75rem;
-  border-radius: 20px;
-  font-weight: bold;
-  font-size: 0.85rem;
-  color: white;
+.address-section {
+  margin-bottom: 15px;
 }
 
-.status-submitted {
-  background-color: #3b82f6; /* Blue */
+.address-box {
+  border: 1px solid #000;
+  padding: 10px;
+  margin-top: 5px;
+  font-size: 14px;
 }
 
-.status-approved {
-  background-color: #22c55e; /* Green */
+.address-box input,
+.address-box textarea {
+  width: 100%;
+  border: none;
+  resize: vertical;
+  font-size: 14px;
+  padding: 2px;
+  box-sizing: border-box;
 }
 
-.status-rejected {
-  background-color: #ef4444; /* Red */
+.attention {
+  text-align: center;
+  margin-bottom: 15px;
 }
 
-/* Items table styling */
-.items-table h3 {
-  font-size: 1.2rem;
-  color: #0f172a;
-  border-bottom: 2px solid #3b82f6;
-  display: inline-block;
-  padding-bottom: 0.25rem;
-  margin-bottom: 1rem;
+.attention p {
+  margin: 2px 0;
 }
 
-table {
+.item-table-container {
+  margin-bottom: 20px;
+}
+
+.item-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 1rem;
 }
 
-thead th {
-  background-color: #e2e8f0;
-  color: #4a5568;
-  font-weight: 600;
-  text-align: left;
-  padding: 1rem;
-  border-bottom: 2px solid #cbd5e0;
-}
-
-tbody td {
-  padding: 1rem;
-  border-bottom: 1px solid #e2e8f0;
-  font-size: 0.9rem;
-  color: #475569;
-}
-
-tbody tr:last-child td {
-  border-bottom: none;
-}
-
-.summary-total {
-  text-align: right;
-  padding-top: 1rem;
-  font-size: 1rem;
-}
-
-.summary-total p {
-  margin: 0.5rem 0;
-  color: #475569;
-}
-
-.grand-total {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #0f172a;
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-  .quotation-container {
-    padding: 1rem;
-  }
-
-  .card-body {
-    flex-direction: column;
-  }
-}
-
-/* Loading spinner */
-.loading-spinner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 200px;
-}
-
-.spinner {
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #3b82f6;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  animation: spin 1s linear infinite;
-  margin-bottom: 1rem;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-.not-found-message {
+.item-table th,
+.item-table td {
+  border: 1px solid #000;
+  padding: 8px;
   text-align: center;
-  font-size: 1.2rem;
-  color: #ef4444;
-  height: 200px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+}
+
+.item-table thead th {
+  background-color: #f2f2f2;
+}
+
+.item-table tbody input {
+  width: 100%;
+  border: none;
+  padding: 0;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.item-table .total-label {
+  text-align: right;
+  font-weight: bold;
+}
+
+.terms {
+  font-size: 12px;
+}
+
+.terms ol {
+  padding-left: 20px;
+}
+
+.terms li {
+  margin-bottom: 5px;
+}
+
+.button-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.button-container button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
 }

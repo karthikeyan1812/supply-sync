@@ -1,67 +1,79 @@
 <div class="quotation-container">
-  
-  <div *ngIf="isLoading" class="loading-spinner">
-    <div class="spinner"></div>
-    <span>Loading...</span>
-  </div>
-
-  <div *ngIf="!isLoading && quotationNotFound" class="not-found-message">
-    <p>Quotation not found.</p>
-  </div>
-
-  <div *ngIf="quotation && !isLoading" class="quotation-card">
-    <div class="card-header">
-      <h2 class="card-title">Quotation Details</h2>
-      <span class="quotation-id">ID: {{ quotation.quotationId }}</span>
+  <div class="header">
+    <div class="logo">
+      <img src="logo.jpeg" alt="JB Enterprises Logo">
     </div>
-
-    <div class="card-body">
-      <div class="client-info">
-        <h3>Client Information</h3>
-        <p><strong>Name:</strong> {{ quotation.clientName }}</p>
-        <p><strong>Contact:</strong> {{ quotation.clientContact }}</p>
-        <p><strong>Address:</strong> {{ quotation.clientAddress }}</p>
-      </div>
-
-      <div class="quote-status">
-        <h3>Quotation Status</h3>
-        <p><strong>Status:</strong> <span class="status-badge status-{{ quotation.status.toLowerCase() }}">{{ quotation.status }}</span></p>
-        <p><strong>Received:</strong> {{ quotation.quotationRecievedDate }}</p>
-        <p><strong>Uploaded:</strong> {{ quotation.quotationUploadedDate }}</p>
-        <p><strong>Tax Percent:</strong> {{ quotation.taxPercent }}%</p>
-      </div>
+    <div class="company-details">
+      <h2>JB ENTERPRISES</h2>
+      <p>L-303, SHIKAGO PARK</p>
+      <p>KARANNAGAR ROAD, KADI, GUJARATH - 382705</p>
+      <p>GST NO. - 24BEVPJ5108J1Z8</p>
     </div>
   </div>
-
-  <div *ngIf="quotation && quotation.items.length > 0 && !isLoading" class="items-table">
-    <h3>Quotation Items</h3>
-    <table>
+  <div class="contact-info">
+    <p>Email ID: <strong>jbenterprises113@gmail.com</strong>, Contact No :<strong>9941540307</strong>.</p>
+  </div>
+  <div class="quotation-info">
+    <div class="info-left">
+      <p>RFQ No: <input type="text" [(ngModel)]="quotation.quotationId"></p>
+      <p>RFQ Date: <input type="date" [(ngModel)]="quotation.quotationRecievedDate"></p>
+    </div>
+    <div class="info-right">
+      <p>Quotation No:</p>
+      <p>Date Of Quotation: <input type="date" [(ngModel)]="quotation.quotationUploadedDate"></p>
+    </div>
+  </div>
+  <div class="address-section">
+    <p><strong>Vender Code - DKEKDID</strong></p>
+    <p><strong>To</strong></p>
+    <div class="address-box">
+      <input type="text" [(ngModel)]="quotation.clientName">
+      <textarea [(ngModel)]="quotation.clientAddress"></textarea>
+    </div>
+  </div>
+  <div class="attention">
+    <p>Kind Attn. - Mr.XYZ</p>
+    <p>Quotation for Manpower Support.</p>
+  </div>
+  <div class="item-table-container">
+    <table class="item-table">
       <thead>
         <tr>
+          <th>Sr No</th>
           <th>Description</th>
-          <th>HSN Code</th>
+          <th>Unit</th>
           <th>Qty</th>
-          <th>Unit Price</th>
-          <th>Total</th>
-          <th>Profit</th>
+          <th>Rate</th>
+          <th>Amount</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let item of quotation.items">
-          <td>{{ item.description }}</td>
-          <td>{{ item.hsnCode }}</td>
-          <td>{{ item.qty }}</td>
-          <td>{{ item.unitPrice | currency }}</td>
-          <td>{{ item.total | currency }}</td>
-          <td>{{ item.profit | currency }}</td>
+        <tr *ngFor="let item of quotation.items; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td><input type="text" [(ngModel)]="item.description"></td>
+          <td>Nos</td>
+          <td><input type="number" [(ngModel)]="item.qty" (ngModelChange)="updateTotal(item)"></td>
+          <td><input type="number" [(ngModel)]="item.unitPrice" (ngModelChange)="updateTotal(item)"></td>
+          <td>{{ item.total | currency:'INR':'symbol':'1.2-2' }}</td>
+        </tr>
+        <tr>
+          <td colspan="4"></td>
+          <td class="total-label">Total Amount</td>
+          <td>{{ calculateTotalAmount() | currency:'INR':'symbol':'1.2-2' }}</td>
         </tr>
       </tbody>
     </table>
-    <div class="summary-total">
-      <p><strong>Subtotal:</strong> {{ calculateSubtotal() | currency }}</p>
-      <p><strong>Tax ({{ quotation.taxPercent }}%):</strong> {{ calculateTax() | currency }}</p>
-      <p class="grand-total"><strong>Grand Total:</strong> {{ calculateGrandTotal() | currency }}</p>
-    </div>
+  </div>
+  <div class="terms">
+    <p><strong>Terms and Condition</strong></p>
+    <ol>
+      <li>GST Extra as applicable</li>
+      <li>Order to be issued as works contract</li>
+      <li>Delivery - 4 Weeks</li>
+    </ol>
   </div>
 
 </div>
+  <div class="button-container">
+    <button (click)="generatePdf()">Generate PDF</button>
+  </div>
