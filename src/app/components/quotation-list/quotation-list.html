@@ -1,31 +1,29 @@
-<div *ngIf="loading">Loading quotations...</div>
-<button (click)="goToNewQuotation()">Create New Quotation</button>
-<p>Test</p>
-<table *ngIf="!loading" border="1" cellspacing="0" cellpadding="5">
-  <thead>
-    <tr>
-      <th>Quotation ID</th>
-      <th>Client Name</th>
-      <th>Client Contact</th>
-      <th>Request Date</th>
-      <th>Status</th>
-      <th>Total Quotation Price</th>
-      <th>Total Purchase Price</th>
-      <th>Payment Status</th>
-      <th>Profit</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let q of quotations">
-      <td>{{ q['Quotation ID'] }}</td>
-      <td>{{ q['Client Name'] }}</td>
-      <td>{{ q['Client Contact'] }}</td>
-      <td>{{ q['Request Date'] }}</td>
-      <td>{{ q['Quotation Status'] }}</td>
-      <td>{{ q['Total Quotation Price'] }}</td>
-      <td>{{ q['Total Purchase Price'] }}</td>
-      <td>{{ q['Payment Status'] }}</td>
-      <td>{{ q['Profit'] }}</td>
-    </tr>
-  </tbody>
-</table>
+<div class="table-container">
+  <h2>Quotation List</h2>
+  <div class="table-scroll">
+    <table class="quotation-table">
+      <thead>
+        <tr>
+          <th>Quotation ID</th>
+          <th>Client Name</th>
+          <th>Contact</th>
+          <th>Quot. Rec Date</th>
+          <th>Quot. Sent Date</th>
+          <th>Tax (%)</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let quote of quotations" (click)="editQuotation(quote)">
+          <td>{{ quote.quotationId }}</td>
+          <td>{{ quote.clientName }}</td>
+          <td>{{ quote.clientContact }}</td>
+          <td>{{ formatDate(quote.quotationRecievedDate) }}</td>
+          <td>{{ formatDate(quote.quotationUploadedDate) }}</td>
+          <td>{{ quote.taxPercent }}</td>
+          <td>{{ quote.status }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

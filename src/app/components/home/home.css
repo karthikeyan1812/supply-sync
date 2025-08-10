@@ -1,0 +1,87 @@
+/* Reset some default styles */
+* {
+  box-sizing: border-box;
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f5f7fa;
+  color: #333;
+}
+
+/* Center content vertically & horizontally */
+:host {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  padding: 20px;
+  text-align: center;
+}
+
+/* Title style */
+h1 {
+  font-weight: 700;
+  font-size: 3rem;
+  margin-bottom: 40px;
+  color: #2c3e50;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Navigation list */
+nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto;
+  max-width: 320px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Each nav item */
+nav li {
+  background: white;
+  padding: 18px 24px;
+  border-radius: 8px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  font-size: 1.2rem;
+  font-weight: 600;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Anchor inside list item fills it */
+nav li a {
+  text-decoration: none;
+  color: #2980b9;
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+/* Hover effect */
+nav li:hover {
+  background: #2980b9;
+  box-shadow: 0 6px 16px rgba(41, 128, 185, 0.4);
+}
+
+nav li:hover a {
+  color: white;
+}
+
+/* Responsive smaller font on narrow screens */
+@media (max-width: 400px) {
+  h1 {
+    font-size: 2.2rem;
+  }
+  nav li {
+    font-size: 1rem;
+    padding: 14px 18px;
+  }
+}

@@ -1,0 +1,67 @@
+<div class="quotation-container">
+  
+  <div *ngIf="isLoading" class="loading-spinner">
+    <div class="spinner"></div>
+    <span>Loading...</span>
+  </div>
+
+  <div *ngIf="!isLoading && quotationNotFound" class="not-found-message">
+    <p>Quotation not found.</p>
+  </div>
+
+  <div *ngIf="quotation && !isLoading" class="quotation-card">
+    <div class="card-header">
+      <h2 class="card-title">Quotation Details</h2>
+      <span class="quotation-id">ID: {{ quotation.quotationId }}</span>
+    </div>
+
+    <div class="card-body">
+      <div class="client-info">
+        <h3>Client Information</h3>
+        <p><strong>Name:</strong> {{ quotation.clientName }}</p>
+        <p><strong>Contact:</strong> {{ quotation.clientContact }}</p>
+        <p><strong>Address:</strong> {{ quotation.clientAddress }}</p>
+      </div>
+
+      <div class="quote-status">
+        <h3>Quotation Status</h3>
+        <p><strong>Status:</strong> <span class="status-badge status-{{ quotation.status.toLowerCase() }}">{{ quotation.status }}</span></p>
+        <p><strong>Received:</strong> {{ quotation.quotationRecievedDate }}</p>
+        <p><strong>Uploaded:</strong> {{ quotation.quotationUploadedDate }}</p>
+        <p><strong>Tax Percent:</strong> {{ quotation.taxPercent }}%</p>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="quotation && quotation.items.length > 0 && !isLoading" class="items-table">
+    <h3>Quotation Items</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Description</th>
+          <th>HSN Code</th>
+          <th>Qty</th>
+          <th>Unit Price</th>
+          <th>Total</th>
+          <th>Profit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of quotation.items">
+          <td>{{ item.description }}</td>
+          <td>{{ item.hsnCode }}</td>
+          <td>{{ item.qty }}</td>
+          <td>{{ item.unitPrice | currency }}</td>
+          <td>{{ item.total | currency }}</td>
+          <td>{{ item.profit | currency }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="summary-total">
+      <p><strong>Subtotal:</strong> {{ calculateSubtotal() | currency }}</p>
+      <p><strong>Tax ({{ quotation.taxPercent }}%):</strong> {{ calculateTax() | currency }}</p>
+      <p class="grand-total"><strong>Grand Total:</strong> {{ calculateGrandTotal() | currency }}</p>
+    </div>
+  </div>
+
+</div>

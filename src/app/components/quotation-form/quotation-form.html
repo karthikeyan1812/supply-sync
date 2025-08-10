@@ -1,43 +1,81 @@
-<h2>Create New Quotation</h2>
-<form [formGroup]="quotationForm" (ngSubmit)="onSubmit()" class="quotation-form">
-  <label>
-    Quotation ID:
-    <input formControlName="quotation_id" />
-  </label>
+<div class="quotation-container">
+  <header class="quotation-header">
+    <div class="company-info">
+      <h2>SupplySync Pvt Ltd</h2>
+      <p>123 Business St, City, Country</p>
+      <p>Phone: +91 9876543210 | Email: info@supplysync.com</p>
+    </div>
+    <div class="quotation-title">
+      <h1>Quotation</h1>
+      <label>
+        Quotation #: <input type="text" [(ngModel)]="quotation.quotationId" placeholder="Auto-generated or enter ID" />
+      </label>
+      <label>
+        Date: <input type="date" [(ngModel)]="quotation.date" />
+      </label>
+    </div>
+  </header>
 
-  <label>
-    Client Name:
-    <input formControlName="client_name" />
-  </label>
+  <section class="client-info">
+    <h3>Client Details</h3>
+    <label>
+      Name: <input type="text" [(ngModel)]="quotation.clientName" placeholder="Client Name" />
+    </label>
+    <label>
+      Contact: <input type="text" [(ngModel)]="quotation.clientContact" placeholder="Client Contact Number" />
+    </label>
+    <label>
+      Email: <input type="email" [(ngModel)]="quotation.clientEmail" placeholder="Client Email" />
+    </label>
+    <label>
+      Address: <textarea [(ngModel)]="quotation.clientAddress" placeholder="Client Address"></textarea>
+    </label>
+  </section>
 
-  <label>
-    Client Mobile:
-    <input formControlName="client_mobile" />
-  </label>
+  <section class="items-section">
+    <h3>Items</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Description</th>
+          <th>Qty</th>
+          <th>Unit Price</th>
+          <th>Total</th>
+          <th><!-- Add / Remove buttons here --></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of quotation.items; let i = index">
+          <td><input type="text" [(ngModel)]="item.description" placeholder="Item description" /></td>
+          <td><input type="number" [(ngModel)]="item.qty" min="1" (input)="updateItemTotal(i)" /></td>
+          <td><input type="number" [(ngModel)]="item.unitPrice" min="0" step="0.01" (input)="updateItemTotal(i)" /></td>
+          <td>{{ item.total | number:'1.2-2' }}</td>
+          <td>
+            <button type="button" (click)="removeItem(i)">Remove</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <button type="button" (click)="addItem()">Add Item</button>
+  </section>
 
-  <label>
-    Quotation Date:
-    <input type="date" formControlName="quotation_date" />
-  </label>
+  <section class="summary-section">
+    <label>
+      Subtotal: <span>{{ calculateSubtotal() | number:'1.2-2' }}</span>
+    </label>
+    <label>
+      Tax (%): <input type="number" [(ngModel)]="quotation.taxPercent" min="0" max="100" (input)="updateTotals()" />
+    </label>
+    <label>
+      Tax Amount: <span>{{ calculateTaxAmount() | number:'1.2-2' }}</span>
+    </label>
+    <label>
+      Total: <span>{{ calculateTotal() | number:'1.2-2' }}</span>
+    </label>
+  </section>
 
-  <label>
-    Status:
-    <select formControlName="status">
-      <option value="Pending">Pending</option>
-      <option value="Approved">Approved</option>
-      <option value="Rejected">Rejected</option>
-    </select>
-  </label>
-
-  <label>
-    Total Amount:
-    <input type="number" formControlName="total_amount" />
-  </label>
-
-  <label>
-    Approval Date:
-    <input type="date" formControlName="approval_date" />
-  </label>
-
-  <button type="submit" [disabled]="quotationForm.invalid">Save Quotation</button>
-</form>
+  <section class="actions">
+    <button (click)="saveQuotation()">Save Quotation</button>
+    <button (click)="generatePDF()">Generate PDF</button>
+  </section>
+</div>
