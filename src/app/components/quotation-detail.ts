@@ -1,32 +1,24 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MatCardModule } from '@angular/material/card';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatTableModule } from '@angular/material/table';
+import { MatButtonModule } from '@angular/material/button';
 import { ActivatedRoute } from '@angular/router';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { finalize, Subject, takeUntil } from 'rxjs';
 import {
   QuotationItemDetail,
   QuotationMasterDetail,
   QuotationService,
 } from '../services/quotation';
 import { GoogleSheetService } from './../services/google-sheet';
-import { finalize, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-quotation-detail',
   templateUrl: './quotation-detail.html',
   styleUrls: ['./quotation-detail.scss'],
   standalone: true,
-  imports: [
-    CommonModule,
-    MatCardModule,
-    MatTableModule,
-    MatDividerModule,
-    FormsModule,
-  ],
+  imports: [CommonModule, MatButtonModule, FormsModule],
 })
 export class QuotationDetailComponent implements OnInit {
   @ViewChild('quotationContainer') quotationContainer!: ElementRef;
