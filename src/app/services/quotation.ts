@@ -1,5 +1,5 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 
 @Injectable({
@@ -7,34 +7,25 @@ import { map, Observable } from 'rxjs';
 })
 export class QuotationService {
   // Your GAS Web App URL
-  private apiUrl = 'https://script.google.com/macros/s/AKfycbzC8-VrwN1FndtxESmdGDKrrI8dwQxvKflL5Wf6MRiHqxCf3DE3DeWBCnz8l7iq9vDDZg/exec';
+  private apiUrl =
+    'https://script.google.com/macros/s/AKfycbwK7stkuakOrQHHRtni6twEaj1USuhy3JURrBfTdy1vWY6WC-F9vBhLwb8yy-Bg2sDfdg/exec';
+  private lastQuotationUrl =
+    'https://script.google.com/macros/s/AKfycbwj42oYFW9MoE40C8v9upn39BksNZid19rNUK94j4w3jbuQMgIB4SD5J0RiZ9S14e7abA/exec';
 
   constructor(private http: HttpClient) {}
 
   saveQuotation(data: any): Observable<any> {
-  const body = new URLSearchParams();
-
-  // Iterate all keys in data
-  for (const key in data) {
-    if (data.hasOwnProperty(key)) {
-      if (key === 'items') {
-        // Stringify the items array
-        body.set(key, JSON.stringify(data[key]));
-      } else {
-        // Normal scalar values
-        body.set(key, data[key]);
-      }
-    }
+    return this.http
+      .post(this.apiUrl, data, {
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        responseType: 'text',
+      })
+      .pipe(map((res) => JSON.parse(res)));
   }
-console.log(body.toString())
-  return this.http.post(this.apiUrl, body.toString(), {
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    responseType: 'text'  // GAS returns text which we parse later
-  }).pipe(
-    map(res => JSON.parse(res)) // parse the JSON string response
-  );
-}
 
+  getLastQuotationNumber() {
+    return this.http.get(this.lastQuotationUrl);
+  }
 }
 
 /**
@@ -57,7 +48,11 @@ export interface QuotationItemDetail {
  * three of your Google Sheets.
  */
 export interface QuotationMasterDetail {
+  quotationNumber: number;
   quotationId: string;
+  rfqId: string;
+  quotationDate: string;
+  rfqDate: string;
   clientName: string;
   clientContact: string;
   clientAddress: string;
@@ -67,4 +62,3 @@ export interface QuotationMasterDetail {
   status: string;
   items: QuotationItemDetail[];
 }
-

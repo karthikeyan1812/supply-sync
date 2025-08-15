@@ -54,7 +54,7 @@ export class QuotationList implements OnInit {
   }
   editQuotation(quotation: QuotationMaster) {
     // Navigate to the form component and pass the selected quotation as state
-    this.router.navigate(['quotation-detail'], { state: { quotation } });
+    this.router.navigate(['quotation-detail', quotation.quotationId]);
     //  this.router.navigate(['/quotation-detail', quotation.quotationId]);
   }
 }

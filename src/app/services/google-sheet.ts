@@ -32,7 +32,7 @@ export class GoogleSheetService {
   private getAllQuotationApi =
     'https://script.google.com/macros/s/AKfycbzcwLAskiqO1dxklyTWxA634frf8P33-ju1t13qJMNmCwOqdTZtnIA7KRboVP7Pn5Qsew/exec';
 private getQuotationByIdApi =
-    'https://script.google.com/macros/s/AKfycbwoZaen2klgqJhrjVU-6VZMRZpNLEfD33kAT2wTbGcUFegnNZmydNFMqpyNh9g5mez6aw/exec';
+    'https://script.google.com/macros/s/AKfycbxi33XPlhEl-fu6KCHLYJ3pcCdeDxak17pTxGnNUVVBuYb6ljXqaXrqMQQTwbN4tVpwZw/exec';
 
   constructor(private http: HttpClient) {}
 

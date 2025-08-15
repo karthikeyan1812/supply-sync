@@ -1,127 +1,169 @@
+import { CommonModule } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { GoogleSheetService } from './../services/google-sheet'; // Adjust the path as needed
-import { CommonModule } from '@angular/common'; // Required for *ngIf, *ngFor
-import { ActivatedRoute, Router } from '@angular/router'; // For getting the ID from the URL
-import { QuotationItemDetail, QuotationMasterDetail } from '../services/quotation';
-import { MatCardModule } from '@angular/material/card';
-import { MatTableModule } from '@angular/material/table';
-import { MatDividerModule } from '@angular/material/divider';
 import { FormsModule } from '@angular/forms';
-import jsPDF from 'jspdf';
+import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatTableModule } from '@angular/material/table';
+import { ActivatedRoute } from '@angular/router';
 import html2canvas from 'html2canvas';
-
+import jsPDF from 'jspdf';
+import {
+  QuotationItemDetail,
+  QuotationMasterDetail,
+  QuotationService,
+} from '../services/quotation';
+import { GoogleSheetService } from './../services/google-sheet';
+import { finalize, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-quotation-detail',
   templateUrl: './quotation-detail.html',
   styleUrls: ['./quotation-detail.css'],
-  standalone: true, // Use this for standalone components in Angular 14+
-  imports: [CommonModule, MatCardModule,
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatCardModule,
     MatTableModule,
-    MatDividerModule,FormsModule]
+    MatDividerModule,
+    FormsModule,
+  ],
 })
 export class QuotationDetailComponent implements OnInit {
-  // Variable to hold the fetched quotation data.
-    @ViewChild('quotationContainer') quotationContainer!: ElementRef;
+  @ViewChild('quotationContainer') quotationContainer!: ElementRef;
 
-  quotation: QuotationMasterDetail  = {
-      quotationId: 'RFQ-12345',
-      clientName: 'ABC Private Limited',
-      clientContact: '9876543210',
-      clientAddress: 'Plant-2, Revenue Survey No.06, North Kotpura Village, Sanand Taluk, Ahmedabad - 382170',
-      taxPercent: 18,
-      quotationRecievedDate: '2025-08-10',
-      quotationUploadedDate: '2025-08-12',
-      status: 'Pending',
-      items: [
-        {
-          hsnCode: 'HSN001',
-          description: 'Test Item',
-          qty: 42,
-          unitPrice: 2800.00,
-          total: 117600.00,
-          unitBuyingPrice: 0,
-          profit: 0
-        },
-        {
-          hsnCode: 'HSN002',
-          description: 'Test Item 2',
-          qty: 42,
-          unitPrice: 2200.00,
-          total: 92400.00,
-          unitBuyingPrice: 0,
-          profit: 0
-        }
-      ]
-    };
-  // A boolean to track the loading state for UI feedback.
-  isLoading = true;
-  // A boolean to show a "not found" message.
+  quotation: QuotationMasterDetail = {
+    quotationNumber: 0,
+    quotationId: '',
+    rfqId: '',
+    quotationDate: '',
+    rfqDate: '',
+    clientName: '',
+    clientContact: '',
+    clientAddress: '',
+    taxPercent: 18,
+    quotationRecievedDate: '',
+    quotationUploadedDate: '',
+    status: '',
+    items: [],
+  };
+
+  isQuotationDetailsLoading = false;
+  isLastQuotationFetchLoading = false;
+  isSaveQuotationLoading = false;
   quotationNotFound = false;
-    quotationId = ''; 
- displayedColumns: string[] = [
-    'hsnCode',
-    'description',
-    'qty',
-    'unitPrice',
-    'total',
-    'unitBuyingPrice',
-    'profit'
-  ];
+  quotationId = '';
+  isNewQuotation = false;
+
+  private destroy$ = new Subject<void>();
 
   constructor(
     private googleSheetService: GoogleSheetService,
-    private router: Router // Used to get the ID from the URL
+    private quotationService: QuotationService,
+    private route: ActivatedRoute
   ) {
-    console.log(this.router.getCurrentNavigation()?.extras.state);
-    const navData = this.router.getCurrentNavigation()?.extras.state as { quotation?: any };
-    console.log(navData);
-    this.quotationId = navData.quotation.quotationId;
+    this.quotationId = this.route.snapshot.paramMap.get('quotationId') || '';
+  }
+
+  ngOnInit(): void {
     if (this.quotationId) {
-      this.googleSheetService.getQuotationById(this.quotationId).subscribe({
+      this.getQuotationById();
+    } else {
+      this.isNewQuotation = true;
+      this.getLastQuotationNumber();
+    }
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  getQuotationById() {
+    this.isQuotationDetailsLoading = true;
+    this.googleSheetService
+      .getQuotationById(this.quotationId)
+      .pipe(
+        finalize(() => {
+          this.isQuotationDetailsLoading = false;
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
         next: (data) => {
-          this.isLoading = false;
           if (data) {
             this.quotation = data;
+            this.quotation.quotationRecievedDate = this.toDateInputValue(
+              this.quotation.quotationRecievedDate
+            );
+            this.quotation.quotationUploadedDate = this.toDateInputValue(
+              this.quotation.quotationUploadedDate
+            );
           } else {
             this.quotationNotFound = true;
           }
         },
         error: (err) => {
           console.error('Error fetching quotation details', err);
-          this.isLoading = false;
           this.quotationNotFound = true;
         },
       });
+  }
+
+  getLastQuotationNumber() {
+    this.isLastQuotationFetchLoading = true;
+    this.quotationService
+      .getLastQuotationNumber()
+      .pipe(
+        finalize(() => {
+          this.isLastQuotationFetchLoading = false;
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (res: any) => {
+          this.quotation.quotationId = this.generateQuotationId(
+            res.maxQuotationNumber + 1
+          );
+        },
+        error: () => {},
+      });
+  }
+
+  generateQuotationId(quotationNumber: number): string {
+    // Pad quotation number to 3 digits
+    const paddedNumber = String(quotationNumber).padStart(3, '0');
+
+    // Get current date
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth() + 1;
+
+    // Determine tax year
+    let startYear: number;
+    let endYear: number;
+    if (month >= 4) {
+      startYear = year % 100;
+      endYear = (year + 1) % 100;
     } else {
-      this.isLoading = false;
-      this.quotationNotFound = true;
+      startYear = (year - 1) % 100;
+      endYear = year % 100;
     }
+
+    const taxYear = `${startYear.toString().padStart(2, '0')}-${endYear
+      .toString()
+      .padStart(2, '0')}`;
+
+    // Build final ID
+    return `JB-GJ/${paddedNumber}/${taxYear}`;
   }
 
-  ngOnInit(): void {
-    // In a real app, you would get the ID from the route.
-    // For this example, we'll use a hardcoded ID for demonstration.
-    // Uncomment the next line and comment out the hardcoded ID for a real routing setup.
-    // const quotationId = this.route.snapshot.paramMap.get('id');
-
-    // Hardcoded ID for a single quotation. Replace with a real ID from your data.
-    // const quotationId = 'Q16810962001'; 
-    
-    
-
-    
-  }
-
-    // Getter to calculate total amount for quotation items
+  // Getter to calculate total amount for quotation items
   get totalAmount(): number {
-    return this.quotation?.items.reduce((sum, item) => sum + item.total, 0) ?? 0;
+    return (
+      this.quotation?.items.reduce((sum, item) => sum + item.total, 0) ?? 0
+    );
   }
 
-  // Recalculate total when qty or unitPrice changes for an item
-  recalcItemTotal(item: QuotationItemDetail) {
-    item.total = item.qty * item.unitPrice;
-  }
   /**
    * Calculates the subtotal of all items in the quotation.
    * @returns The sum of all item totals.
@@ -133,7 +175,7 @@ export class QuotationDetailComponent implements OnInit {
     return this.quotation.items.reduce((sum, item) => sum + item.total, 0);
   }
 
-    /**
+  /**
    * Updates the total amount for a single item whenever its quantity or unit price changes.
    * @param item The quotation item to update.
    */
@@ -153,22 +195,36 @@ export class QuotationDetailComponent implements OnInit {
     const data = document.querySelector('.quotation-container') as HTMLElement;
 
     if (data) {
-      html2canvas(data, { scale: 2 }).then(canvas => {
+      html2canvas(data, { scale: 2 }).then((canvas) => {
         const imgWidth = 210; // A4 width in mm
         const pageHeight = 297; // A4 height in mm
-        const imgHeight = canvas.height * imgWidth / canvas.width;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
         let heightLeft = imgHeight;
 
         const doc = new jsPDF('p', 'mm', 'a4');
         let position = 0;
 
-        doc.addImage(canvas.toDataURL('image/png'), 'PNG', 0, position, imgWidth, imgHeight);
+        doc.addImage(
+          canvas.toDataURL('image/png'),
+          'PNG',
+          0,
+          position,
+          imgWidth,
+          imgHeight
+        );
         heightLeft -= pageHeight;
 
         while (heightLeft >= 0) {
           position = heightLeft - imgHeight;
           doc.addPage();
-          doc.addImage(canvas.toDataURL('image/png'), 'PNG', 0, position, imgWidth, imgHeight);
+          doc.addImage(
+            canvas.toDataURL('image/png'),
+            'PNG',
+            0,
+            position,
+            imgWidth,
+            imgHeight
+          );
           heightLeft -= pageHeight;
         }
 
@@ -181,7 +237,7 @@ export class QuotationDetailComponent implements OnInit {
     const DATA = this.quotationContainer.nativeElement;
 
     // Use html2canvas to capture the component as an image
-    html2canvas(DATA, { scale: 2 }).then(canvas => {
+    html2canvas(DATA, { scale: 2 }).then((canvas) => {
       const imgData = canvas.toDataURL('image/png');
 
       // A4 size page at 72dpi is 595x842 px, using higher scale so fit more
@@ -213,5 +269,48 @@ export class QuotationDetailComponent implements OnInit {
    */
   calculateGrandTotal(): number {
     return this.calculateSubtotal() + this.calculateTax();
+  }
+
+  toDateInputValue(isoString: string): string {
+    const date = new Date(isoString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  saveQuotation() {
+    console.log('Save quotation:', this.quotation);
+    this.quotationService
+      .saveQuotation(this.quotation)
+      .pipe(
+        finalize(() => {
+          this.isSaveQuotationLoading = false;
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (res) => {
+          console.log('Quotation saved', res);
+          // show success message or navigate
+        },
+        error: (err) => {
+          console.error('Error saving quotation', err);
+          // show error message
+        },
+      });
+  }
+
+  addItem() {
+    const newItem = {
+      hsnCode: '',
+      description: '',
+      qty: 0,
+      unitPrice: 0.0,
+      total: 0.0,
+      unitBuyingPrice: 0,
+      profit: 0,
+    };
+    this.quotation.items.push(newItem);
   }
 }

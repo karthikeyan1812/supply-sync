@@ -15,12 +15,12 @@
   </div>
   <div class="quotation-info">
     <div class="info-left">
-      <p>RFQ No: <input type="text" [(ngModel)]="quotation.quotationId"></p>
-      <p>RFQ Date: <input type="date" [(ngModel)]="quotation.quotationRecievedDate"></p>
+      <p>RFQ No: <input type="text" [(ngModel)]="quotation.rfqId"></p>
+      <p>RFQ Date: <input type="date" [(ngModel)]="quotation.rfqDate"></p>
     </div>
     <div class="info-right">
-      <p>Quotation No:</p>
-      <p>Date Of Quotation: <input type="date" [(ngModel)]="quotation.quotationUploadedDate"></p>
+      <p>Quotation No: {{quotation.quotationId}}</p>
+      <p>Date Of Quotation: <input type="date" [(ngModel)]="quotation.quotationDate"></p>
     </div>
   </div>
   <div class="address-section">
@@ -63,6 +63,7 @@
         </tr>
       </tbody>
     </table>
+    <button (click)="addItem()">Add Item</button>
   </div>
   <div class="terms">
     <p><strong>Terms and Condition</strong></p>
@@ -76,4 +77,5 @@
 </div>
   <div class="button-container">
     <button (click)="generatePdf()">Generate PDF</button>
+    <button (click)="saveQuotation()">Save Quotation</button>
   </div>
