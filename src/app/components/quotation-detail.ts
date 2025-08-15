@@ -18,7 +18,7 @@ import { finalize, Subject, takeUntil } from 'rxjs';
 @Component({
   selector: 'app-quotation-detail',
   templateUrl: './quotation-detail.html',
-  styleUrls: ['./quotation-detail.css'],
+  styleUrls: ['./quotation-detail.scss'],
   standalone: true,
   imports: [
     CommonModule,

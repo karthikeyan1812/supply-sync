@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [CommonModule],  // add more if needed
   templateUrl: './quotation-list.html',
-  styleUrls: ['./quotation-list.css'],
+  styleUrls: ['./quotation-list.scss'],
 })
 export class QuotationList implements OnInit {
   quotations: QuotationMaster[] = [];
